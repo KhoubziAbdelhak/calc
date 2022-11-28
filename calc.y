@@ -20,7 +20,7 @@
 %token CR
 %token <val> number
 %token <sym> identifier
-%type <val> line exp term 
+%type <val> line exp e1 term 
 %type <sym> assignment
 
 
@@ -39,10 +39,15 @@ assignment: identifier '=' exp		{updateSymbolVal($1, $3);}
 
 
 
-exp: exp '+' term		{$$ = $1 + $3;}
-   | exp '-' term		{$$ = $1 - $3;}
-   | term				{$$ = $1;}
+exp: exp '+' e1			{$$ = $1 + $3;}
+   | exp '-' e1 		{$$ = $1 - $3;}
+   | e1					{$$ = $1;}
    ;
+
+e1: e1 '*' term			{$$ = $1 * $3;}
+  | e1 '/' term			{$$ = $1 / $3;}
+  | term				{$$ = $1;}
+  ;
 
 term: identifier		{$$ = symbolVal($1);}
 	| number			{$$ = $1;}

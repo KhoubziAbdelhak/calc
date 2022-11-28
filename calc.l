@@ -13,7 +13,7 @@
 [0-9]+			{yylval.val = atoi(yytext); return number;}
 [\n]			{return CR;}
 [ \t]			;
-[-+=]			{return yytext[0];}
+[-+*/=]			{return yytext[0];}
 .				{ECHO; yyerror("unexpected character");}
 
 
