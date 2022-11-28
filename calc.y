@@ -10,7 +10,7 @@
 %}
 
 %union{
-	int val;
+	float val;
 	char sym;
 }
 
@@ -20,7 +20,7 @@
 %token CR
 %token <val> number
 %token <sym> identifier
-%type <val> line exp e1 term 
+%type <val> line exp e1 e2 term 
 %type <sym> assignment
 
 
@@ -28,8 +28,8 @@
 
 line: assignment CR				{;}
 	| line assignment CR		{;}
-	| print exp	CR				{printf("printing %d\n", $2);}
-	| line print exp CR		 	{printf("printing %d\n", $3);}
+	| print exp	CR				{printf("printing %f\n", $2);}
+	| line print exp CR		 	{printf("printing %f\n", $3);}
 	| exit_command CR			{exit(EXIT_SUCCESS);}
 	| line exit_command CR		{exit(EXIT_SUCCESS);}
 	;
@@ -44,8 +44,12 @@ exp: exp '+' e1			{$$ = $1 + $3;}
    | e1					{$$ = $1;}
    ;
 
-e1: e1 '*' term			{$$ = $1 * $3;}
-  | e1 '/' term			{$$ = $1 / $3;}
+e1: e1 '*' e2			{$$ = $1 * $3;}
+  | e1 '/' e2			{$$ = $1 / $3;}
+  | e2					{$$ = $1;}
+  ;
+
+e2: '(' exp ')'			{$$ = $2;}
   | term				{$$ = $1;}
   ;
 
